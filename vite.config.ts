@@ -5,7 +5,8 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   // If building for GitHub Pages, use the repo name as base
-  base: process.env.VITE_BASE || '/',
+  // GitHub Pages is case-sensitive for paths
+  base: process.env.VITE_BASE || '/HA-Picture-Element-Card-Editor/',
   server: {
     proxy: {
       '/api': {

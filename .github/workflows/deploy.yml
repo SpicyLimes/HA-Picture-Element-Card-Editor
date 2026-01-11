@@ -21,7 +21,7 @@ jobs:
           npm install
           npm run build
         env:
-          VITE_BASE: /ha-picture-element-card-editor/
+          VITE_BASE: /HA-Picture-Element-Card-Editor/
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
