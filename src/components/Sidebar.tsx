@@ -8,15 +8,21 @@ export const Sidebar: React.FC = () => {
     const { url, token, isConnected, isLoading, error, setConnection, connect } = useHAStore();
     const { addElement } = useEditorStore();
 
+    const generateId = () => {
+        if (typeof crypto.randomUUID === 'function') {
+            return crypto.randomUUID();
+        }
+        return Math.random().toString(36).substring(2) + Date.now().toString(36);
+    };
+
     const handleAddIcon = () => {
-        // Add a default icon element to center of canvas
         addElement({
-            id: crypto.randomUUID(),
+            id: generateId(),
             type: 'icon',
             x: 50,
             y: 50,
             config: {
-                icon: 'mdi:home', // Default icon
+                icon: 'mdi:home',
                 style: {
                     '--paper-item-icon-color': 'var(--primary-text-color)'
                 }
@@ -26,7 +32,7 @@ export const Sidebar: React.FC = () => {
 
     const handleAddLabel = () => {
         addElement({
-            id: crypto.randomUUID(),
+            id: generateId(),
             type: 'label',
             x: 50,
             y: 50,

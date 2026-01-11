@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://192.168.50.23:8123',
+        target: 'http://localhost:8123', // Change to your HA IP
         changeOrigin: true,
       }
     }

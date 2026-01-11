@@ -91,76 +91,88 @@ export const Canvas: React.FC = () => {
             />
 
             <div className="flex-1 overflow-auto flex items-center justify-center p-8">
-                {backgroundImage ? (
-                    <div
-                        className="relative shadow-lg transition-transform duration-200 origin-center"
-                        style={{ transform: `scale(${zoom})` }}
-                    >
-                        {/* Image Element for exact sizing */}
-                        <img
-                            src={backgroundImage}
-                            alt="Floorplan"
-                            className="block max-w-none"
-                            style={{
-                                pointerEvents: 'none', // Prevent image dragging ghost
-                                userSelect: 'none'
-                            }}
-                            draggable={false}
-                        />
-
-                        {/* Overlay Container matching image size */}
-                        <div
-                            ref={divRef as React.RefObject<HTMLDivElement>}
-                            onClick={handleBackgroundClick}
-                            className="absolute inset-0 z-0"
-                        >
-                            {elements.map(el => (
-                                <ElementItem
-                                    key={el.id}
-                                    element={el}
-                                    containerRef={divRef as React.RefObject<HTMLDivElement>}
-                                />
-                            ))}
-                        </div>
-                    </div>
-                ) : (
-                    <div className="flex flex-col items-center justify-center text-gray-400 border-2 border-dashed border-gray-300 rounded-lg p-12 bg-gray-800/50">
-                        <p className="text-lg mb-4 font-medium text-gray-300">Start by adding a floorplan</p>
-
-                        <div className="flex flex-col gap-4 w-full max-w-xs">
-                            <button
-                                onClick={() => fileInputRef.current?.click()}
-                                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors font-medium shadow-lg shadow-blue-900/20"
+                <div
+                    className={clsx(
+                        "relative shadow-lg transition-transform duration-200 origin-center",
+                        !backgroundImage && "w-[800px] aspect-[16/9] bg-gray-800 border-2 border-dashed border-gray-700 flex items-center justify-center"
+                    )}
+                    style={{ transform: `scale(${zoom})` }}
+                >
+                    {backgroundImage ? (
+                        <>
+                            <img
+                                src={backgroundImage}
+                                alt="Floorplan"
+                                className="block max-w-none"
+                                style={{
+                                    pointerEvents: 'none',
+                                    userSelect: 'none'
+                                }}
+                                draggable={false}
+                            />
+                            <div
+                                ref={divRef as React.RefObject<HTMLDivElement>}
+                                onClick={handleBackgroundClick}
+                                className="absolute inset-0 z-0"
                             >
-                                Upload Image
-                            </button>
-
-                            <div className="flex items-center gap-2">
-                                <span className="h-px bg-gray-600 flex-1"></span>
-                                <span className="text-xs text-gray-500 uppercase">OR import URL</span>
-                                <span className="h-px bg-gray-600 flex-1"></span>
+                                {elements.map(el => (
+                                    <ElementItem
+                                        key={el.id}
+                                        element={el}
+                                        containerRef={divRef as React.RefObject<HTMLDivElement>}
+                                    />
+                                ))}
                             </div>
-
-                            <div className="flex gap-2">
-                                <input
-                                    type="text"
-                                    value={imageUrlInput}
-                                    onChange={(e) => setImageUrlInput(e.target.value)}
-                                    placeholder="https://example.com/plan.png"
-                                    className="flex-1 bg-gray-900 border border-gray-600 rounded px-3 py-1.5 text-sm text-white focus:outline-none focus:border-blue-500"
-                                />
+                        </>
+                    ) : (
+                        <div className="flex flex-col items-center justify-center text-gray-400 p-12 text-center">
+                            <p className="text-lg mb-4 font-medium text-gray-300">Start by adding a floorplan</p>
+                            <div className="flex flex-col gap-4 w-full max-w-xs pointer-events-auto">
                                 <button
-                                    onClick={handleUrlImport}
-                                    disabled={!imageUrlInput}
-                                    className="px-3 py-1.5 bg-gray-700 text-white rounded hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                                    onClick={() => fileInputRef.current?.click()}
+                                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors font-medium shadow-lg shadow-blue-900/20"
                                 >
-                                    Go
+                                    Upload Image
                                 </button>
+                                <div className="flex items-center gap-2">
+                                    <span className="h-px bg-gray-600 flex-1"></span>
+                                    <span className="text-xs text-gray-500 uppercase">OR import URL</span>
+                                    <span className="h-px bg-gray-600 flex-1"></span>
+                                </div>
+                                <div className="flex gap-2">
+                                    <input
+                                        type="text"
+                                        value={imageUrlInput}
+                                        onChange={(e) => setImageUrlInput(e.target.value)}
+                                        placeholder="https://example.com/plan.png"
+                                        className="flex-1 bg-gray-900 border border-gray-600 rounded px-3 py-1.5 text-sm text-white focus:outline-none focus:border-blue-500"
+                                    />
+                                    <button
+                                        onClick={handleUrlImport}
+                                        disabled={!imageUrlInput}
+                                        className="px-3 py-1.5 bg-gray-700 text-white rounded hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                                    >
+                                        Go
+                                    </button>
+                                </div>
+                            </div>
+                            <div
+                                ref={divRef as React.RefObject<HTMLDivElement>}
+                                onClick={handleBackgroundClick}
+                                className="absolute inset-0 z-0 pointer-events-none"
+                            >
+                                {elements.map(el => (
+                                    <div key={el.id} className="pointer-events-auto">
+                                        <ElementItem
+                                            element={el}
+                                            containerRef={divRef as React.RefObject<HTMLDivElement>}
+                                        />
+                                    </div>
+                                ))}
                             </div>
                         </div>
-                        <p className="mt-6 text-sm text-gray-500">You can also drag and drop an image file here</p>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         </div>
     );

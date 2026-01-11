@@ -15,6 +15,18 @@ A Drag-and-Drop Web UI App to configure the Home Assistant "Picture Element Card
 5.  **Edit**: Drag icons onto the canvas, configure them in the sidebar.
 6.  **Export**: Copy the YAML from the "Live Editor" panel and paste it into your HA Dashboard configuration.
 
+### Troubleshooting HA Connection (CORS)
+If the connection fail, it is likely due to **CORS (Cross-Origin Resource Sharing)**. Home Assistant blocks requests from other domains/ports by default.
+
+To fix this, add the following to your Home Assistant `configuration.yaml`:
+
+```yaml
+http:
+  cors_allowed_origins:
+    - "http://YOUR_SERVER_IP:8099"  # The IP/port where this editor is running
+```
+*Note: Replace `YOUR_SERVER_IP` with the IP address of the machine running this editor. If running on the same machine as HA, use `http://127.0.0.1:8099`.*
+
 ## Installation
 
 This application is distributed as a Docker container, making it easy to run on your Home Server (Unraid, Synology, Raspberry Pi, etc.) using Docker or Portainer.
