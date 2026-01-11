@@ -4,9 +4,10 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  // If building for GitHub Pages, use the repo name as base
-  // GitHub Pages is case-sensitive for paths
-  base: process.env.VITE_BASE || '/HA-Picture-Element-Card-Editor/',
+  // GitHub Pages requires the repo name as the base path.
+  // We set this via the VITE_BASE environment variable in our GitHub Action.
+  // For Docker/Local usage, it defaults to '/'
+  base: process.env.VITE_BASE || '/',
   server: {
     proxy: {
       '/api': {
