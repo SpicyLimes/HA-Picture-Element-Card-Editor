@@ -73,6 +73,14 @@ export const Sidebar: React.FC = () => {
                         />
                     </div>
 
+                    {window.location.protocol === 'https:' && (
+                        <div className="bg-yellow-900/20 border border-yellow-800/50 p-2 rounded">
+                            <p className="text-[10px] text-yellow-500 leading-tight">
+                                <strong>Note:</strong> Since this app is hosted over HTTPS, your Home Assistant instance <strong>must</strong> also use HTTPS (e.g., Nabu Casa or Cloudflare) due to browser security policies.
+                            </p>
+                        </div>
+                    )}
+
                     <button
                         onClick={connect}
                         disabled={isLoading}
