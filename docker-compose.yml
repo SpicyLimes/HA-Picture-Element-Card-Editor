@@ -2,7 +2,6 @@ version: '3'
 services:
   ha-picture-element-card-editor:
     container_name: ha-picture-element-card-editor
-    # FOR END USERS: Use the pre-built image from GitHub Container Registry
     image: ghcr.io/spicylimes/ha-picture-element-card-editor:main
     ports:
       - "8099:3000"
