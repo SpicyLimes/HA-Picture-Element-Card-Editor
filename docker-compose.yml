@@ -1,0 +1,8 @@
+version: '3'
+services:
+  picture-element-card-editor:
+    container_name: picture-element-card-editor
+    image: ghcr.io/spicylimes/picture-element-card-editor:main
+    ports:
+      - "8099:3000"
+    restart: unless-stopped
