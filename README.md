@@ -24,15 +24,15 @@ If you use Portainer, this is the easiest method.
 
 1.  Log into **Portainer**.
 2.  Go to **Stacks** > **Add stack**.
-3.  Name it `picture-element-card-editor`.
+3.  Name it `ha-picture-element-card-editor`.
 4.  Paste the following into the **Web editor**:
 
 ```yaml
 version: '3'
 services:
   editor:
-    image: ghcr.io/spicylimes/picture-element-card-editor:main
-    container_name: picture-element-card-editor
+    image: ghcr.io/spicylimes/ha-picture-element-card-editor:main
+    container_name: ha-picture-element-card-editor
     ports:
       - "8099:3000"
     restart: unless-stopped
@@ -42,13 +42,12 @@ services:
 
 ### Option 2: Docker CLI
 If you prefer the command line:
-
 ```bash
 docker run -d \
-  --name picture-element-card-editor \
+  --name ha-picture-element-card-editor \
   -p 8099:3000 \
   --restart unless-stopped \
-  ghcr.io/spicylimes/picture-element-card-editor:main
+  ghcr.io/spicylimes/ha-picture-element-card-editor:main
 ```
 
 Access the editor at `http://YOUR_SERVER_IP:8099`.
@@ -61,8 +60,8 @@ If you manage `docker-compose.yaml` files manually:
     version: '3'
     services:
       editor:
-        image: ghcr.io/spicylimes/picture-element-card-editor:main
-        container_name: picture-element-card-editor
+        image: ghcr.io/spicylimes/ha-picture-element-card-editor:main
+        container_name: ha-picture-element-card-editor
         ports:
           - "8099:3000"
         restart: unless-stopped
