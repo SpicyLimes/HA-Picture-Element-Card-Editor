@@ -1,11 +1,8 @@
 import React from 'react';
-import { useHAStore } from '../store/haStore';
-import { clsx } from 'clsx';
 import { useEditorStore } from '../store/editorStore';
 import { YamlEditor } from './YamlEditor';
 
 export const Sidebar: React.FC = () => {
-    const { url, token, isConnected, isLoading, error, setConnection, connect } = useHAStore();
     const { addElement } = useEditorStore();
 
     const generateId = () => {
@@ -13,6 +10,47 @@ export const Sidebar: React.FC = () => {
             return crypto.randomUUID();
         }
         return Math.random().toString(36).substring(2) + Date.now().toString(36);
+    };
+
+    const handleAddStateIcon = () => {
+        addElement({
+            id: generateId(),
+            type: 'state-icon',
+            x: 50,
+            y: 50,
+            config: {
+                entity: 'light.living_room',
+                tap_action: { action: 'toggle' }
+            }
+        });
+    };
+
+    const handleAddStateLabel = () => {
+        addElement({
+            id: generateId(),
+            type: 'state-label',
+            x: 50,
+            y: 50,
+            config: {
+                entity: 'sensor.temperature',
+                style: {
+                    'color': 'white',
+                    'font-weight': 'bold'
+                }
+            }
+        });
+    };
+
+    const handleAddStateBadge = () => {
+        addElement({
+            id: generateId(),
+            type: 'state-badge',
+            x: 50,
+            y: 50,
+            config: {
+                entity: 'sensor.temperature'
+            }
+        });
     };
 
     const handleAddIcon = () => {
@@ -24,108 +62,132 @@ export const Sidebar: React.FC = () => {
             config: {
                 icon: 'mdi:home',
                 style: {
-                    '--paper-item-icon-color': 'var(--primary-text-color)'
+                    '--paper-item-icon-color': 'white'
                 }
             }
         });
     };
 
-    const handleAddLabel = () => {
+    const handleAddImage = () => {
         addElement({
             id: generateId(),
-            type: 'label',
+            type: 'image',
             x: 50,
             y: 50,
             config: {
-                entity: 'sensor.time',
+                image: 'https://demo.home-assistant.io/stub_config/bedroom.png',
                 style: {
-                    'color': 'white',
-                    'font-weight': 'bold'
+                    'width': '10%'
                 }
             }
+        });
+    };
+
+    const handleAddConditional = () => {
+        addElement({
+            id: generateId(),
+            type: 'conditional',
+            x: 50,
+            y: 50,
+            config: {
+                conditions: [
+                    { entity: 'input_boolean.test', state: 'on' }
+                ]
+            },
+            elements: []
         });
     };
 
     return (
         <div className="w-80 bg-gray-800 text-white flex flex-col border-r border-gray-700 h-full flex-shrink-0">
-            {/* HA Connection Section */}
-            <div className="p-4 border-b border-gray-700 bg-gray-900/50">
-                <h2 className="text-sm font-bold uppercase text-gray-400 mb-3 tracking-wider">HA Connection</h2>
-                <div className="flex flex-col gap-3">
-                    <div>
-                        <label className="text-xs text-gray-500 mb-1 block">Instance URL</label>
-                        <input
-                            type="text"
-                            value={url}
-                            onChange={(e) => setConnection(e.target.value, token)}
-                            className="w-full bg-gray-700 text-white px-3 py-1.5 rounded text-sm border border-gray-600 focus:border-blue-500 outline-none transition-colors placeholder-gray-500"
-                            placeholder="http://192.168.x.x:8123"
-                        />
-                    </div>
-                    <div>
-                        <label className="text-xs text-gray-500 mb-1 block">Long-Lived Access Token</label>
-                        <input
-                            type="password"
-                            value={token}
-                            onChange={(e) => setConnection(url, e.target.value)}
-                            className="w-full bg-gray-700 text-white px-3 py-1.5 rounded text-sm border border-gray-600 focus:border-blue-500 outline-none transition-colors placeholder-gray-500"
-                            placeholder="Paste token here..."
-                        />
-                    </div>
-
-                    {window.location.protocol === 'https:' && (
-                        <div className="bg-yellow-900/20 border border-yellow-800/50 p-2 rounded">
-                            <p className="text-[10px] text-yellow-500 leading-tight">
-                                <strong>Note:</strong> Since this app is hosted over HTTPS, your Home Assistant instance <strong>must</strong> also use HTTPS (e.g., Nabu Casa or Cloudflare) due to browser security policies.
-                            </p>
-                        </div>
-                    )}
-
-                    <button
-                        onClick={connect}
-                        disabled={isLoading}
-                        className={clsx(
-                            "mt-1 w-full py-2 rounded text-sm font-medium transition-all shadow-sm",
-                            isConnected
-                                ? "bg-green-600 hover:bg-green-700 text-white shadow-green-900/20"
-                                : "bg-blue-600 hover:bg-blue-700 text-white shadow-blue-900/20",
-                            isLoading && "opacity-70 cursor-wait"
-                        )}
-                    >
-                        {isLoading ? 'Connecting...' : isConnected ? 'Connected Successfully' : 'Connect'}
-                    </button>
-
-                    {error && <p className="text-xs text-red-400 bg-red-900/20 p-2 rounded border border-red-900/50">{error}</p>}
-                </div>
-            </div>
-
             {/* Tools Section */}
             <div className="p-4 border-b border-gray-700">
-                <h2 className="text-sm font-bold uppercase text-gray-400 mb-3 tracking-wider">Elements</h2>
-                <div className="grid grid-cols-2 gap-2">
-                    <button
-                        onClick={handleAddIcon}
-                        className="p-3 bg-gray-700 hover:bg-gray-600 rounded flex flex-col items-center justify-center gap-2 transition-colors group aspect-square"
-                    >
-                        <div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center group-hover:bg-blue-500 group-hover:text-white transition-colors">
-                            {/* Simple Icon placeholder */}
-                            <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                                <path d="M12,2L2,12H5V22H19V12H22L12,2Z" />
-                            </svg>
-                        </div>
-                        <span className="text-xs font-medium text-gray-300 group-hover:text-white">Icon</span>
-                    </button>
+                <h2 className="text-sm font-bold uppercase text-gray-400 mb-3 tracking-wider text-center">Add Elements</h2>
 
-                    {/* Label Element */}
-                    <button
-                        onClick={handleAddLabel}
-                        className="p-3 bg-gray-700 hover:bg-gray-600 rounded flex flex-col items-center justify-center gap-2 transition-colors group aspect-square hover:ring-2 hover:ring-purple-500/50"
-                    >
-                        <div className="w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center group-hover:bg-purple-500 group-hover:text-white transition-colors">
-                            <span className="font-bold text-xs">Abc</span>
-                        </div>
-                        <span className="text-xs font-medium text-gray-300 group-hover:text-white">Label</span>
-                    </button>
+                {/* Entity Linked Elements */}
+                <div className="mb-4">
+                    <h3 className="text-[10px] font-bold text-gray-500 uppercase mb-2 ml-1">State Based</h3>
+                    <div className="grid grid-cols-2 gap-2">
+                        <button
+                            onClick={handleAddStateIcon}
+                            className="p-3 bg-gray-700 hover:bg-gray-600 rounded flex flex-col items-center justify-center gap-2 transition-all group aspect-square"
+                            title="State Icon - Changes icon/color based on entity state"
+                        >
+                            <div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                                <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                                    <path d="M12,2L2,12H5V22H19V12H22L12,2Z" />
+                                </svg>
+                            </div>
+                            <span className="text-[10px] font-medium text-gray-300 group-hover:text-white text-center">State Icon</span>
+                        </button>
+
+                        <button
+                            onClick={handleAddStateLabel}
+                            className="p-3 bg-gray-700 hover:bg-gray-600 rounded flex flex-col items-center justify-center gap-2 transition-all group aspect-square"
+                            title="State Label - Displays the text state of an entity"
+                        >
+                            <div className="w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center group-hover:bg-purple-500 group-hover:text-white transition-colors">
+                                <span className="font-bold text-xs">Abc</span>
+                            </div>
+                            <span className="text-[10px] font-medium text-gray-300 group-hover:text-white text-center">State Label</span>
+                        </button>
+
+                        <button
+                            onClick={handleAddStateBadge}
+                            className="p-3 bg-gray-700 hover:bg-gray-600 rounded flex flex-col items-center justify-center gap-2 transition-all group aspect-square"
+                            title="State Badge - Standard Home Assistant circular badge"
+                        >
+                            <div className="w-8 h-8 rounded-full bg-orange-500/20 text-orange-400 flex items-center justify-center group-hover:bg-orange-500 group-hover:text-white transition-colors border-2 border-orange-500/30">
+                                <span className="font-bold text-[9px]">21°</span>
+                            </div>
+                            <span className="text-[10px] font-medium text-gray-300 group-hover:text-white text-center">Badge</span>
+                        </button>
+                    </div>
+                </div>
+
+                {/* Static / Structural Elements */}
+                <div>
+                    <h3 className="text-[10px] font-bold text-gray-500 uppercase mb-2 ml-1">Static & Groups</h3>
+                    <div className="grid grid-cols-2 gap-2">
+                        <button
+                            onClick={handleAddIcon}
+                            className="p-3 bg-gray-700 hover:bg-gray-600 rounded flex flex-col items-center justify-center gap-2 transition-all group aspect-square"
+                            title="Static Icon - Simple icon with no state link"
+                        >
+                            <div className="w-8 h-8 rounded-full bg-gray-600/50 text-gray-300 flex items-center justify-center group-hover:bg-gray-500 group-hover:text-white transition-colors">
+                                <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                                    <path d="M13,3V9H21V3H13M13,21H21V11H13V21M3,21H11V15H3V21M3,13H11V3H3V13Z" />
+                                </svg>
+                            </div>
+                            <span className="text-[10px] font-medium text-gray-300 group-hover:text-white text-center">Static Icon</span>
+                        </button>
+
+                        <button
+                            onClick={handleAddImage}
+                            className="p-3 bg-gray-700 hover:bg-gray-600 rounded flex flex-col items-center justify-center gap-2 transition-all group aspect-square"
+                            title="Image - Overlay image or camera stream"
+                        >
+                            <div className="w-8 h-8 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center group-hover:bg-green-500 group-hover:text-white transition-colors">
+                                <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                                    <path d="M21,19V5C21,3.89 20.1,3 19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.89,21 5,21H19C20.1,21 21,20.1 21,19M8.5,13.5L11,16.5L14.5,12L19,18H5L8.5,13.5Z" />
+                                </svg>
+                            </div>
+                            <span className="text-[10px] font-medium text-gray-300 group-hover:text-white text-center">Image</span>
+                        </button>
+
+                        <button
+                            onClick={handleAddConditional}
+                            className="p-3 bg-gray-700 hover:bg-gray-600 rounded flex flex-col items-center justify-center gap-2 transition-all group aspect-square"
+                            title="Conditional - Group elements and show/hide based on state"
+                        >
+                            <div className="w-8 h-8 rounded-full bg-yellow-500/20 text-yellow-500 flex items-center justify-center group-hover:bg-yellow-500 group-hover:text-white transition-colors">
+                                <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                                    <path d="M13,2V5H11V2H13M20.96,15.29L19.55,13.88L21.67,11.76L23.08,13.17L20.96,15.29M11,19V22H13V19H11M2.33,13.17L3.74,11.76L5.86,13.88L4.45,15.29L2.33,13.17M11,7A5,5 0 0,0 6,12A5,5 0 0,0 11,17A5,5 0 0,0 16,12A5,5 0 0,0 11,7Z" />
+                                </svg>
+                            </div>
+                            <span className="text-[10px] font-medium text-gray-300 group-hover:text-white text-center">Conditional</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 

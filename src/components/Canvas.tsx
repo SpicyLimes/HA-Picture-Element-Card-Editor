@@ -126,7 +126,7 @@ export const Canvas: React.FC = () => {
                         </>
                     ) : (
                         <div className="flex flex-col items-center justify-center text-gray-400 p-12 text-center">
-                            <p className="text-lg mb-4 font-medium text-gray-300">Start by adding a floorplan</p>
+                            <p className="text-lg mb-4 font-medium text-gray-300">Start by adding an Image</p>
                             <div className="flex flex-col gap-4 w-full max-w-xs pointer-events-auto">
                                 <button
                                     onClick={() => fileInputRef.current?.click()}

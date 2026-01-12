@@ -2,10 +2,11 @@ import { create } from 'zustand';
 
 export interface EditorElement {
     id: string;
-    type: string; // 'icon', 'label', 'image', etc.
+    type: string; // 'icon', 'label', 'state-label', 'image', 'conditional', etc.
     x: number;
     y: number;
     config: Record<string, any>;
+    elements?: EditorElement[]; // For nested elements in group/conditional types
 }
 
 interface EditorState {

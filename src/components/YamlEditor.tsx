@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useEditorStore } from '../store/editorStore';
+import { useEditorStore, type EditorElement } from '../store/editorStore';
 import { generateYaml } from '../utils/yaml-generator';
 import yaml from 'js-yaml';
 
@@ -32,7 +32,7 @@ export const YamlEditor: React.FC = () => {
 
                 // Update Elements
                 if (Array.isArray(parsed.elements)) {
-                    const newElements = parsed.elements.map((el: any) => {
+                    const parseElement = (el: any): EditorElement => {
                         const style = el.style || {};
                         const x = parseFloat(String(style.left).replace('%', '')) || 50;
                         const y = parseFloat(String(style.top).replace('%', '')) || 50;
@@ -42,20 +42,33 @@ export const YamlEditor: React.FC = () => {
                         delete cleanStyle.top;
                         delete cleanStyle.left;
 
-                        return {
+                        const config = { ...el };
+                        delete config.type;
+                        delete config.style;
+                        delete config.elements;
+
+                        // Map prefix/text if needed for our UI
+                        if (el.prefix && !config.text) config.text = el.prefix;
+
+                        const element: EditorElement = {
                             id: crypto.randomUUID(),
-                            type: el.type === 'state-label' ? 'label' : 'icon',
+                            type: el.type || 'state-icon',
                             x,
                             y,
                             config: {
-                                entity: el.entity,
-                                icon: el.icon,
-                                text: el.prefix, // Map prefix to text for labels
-                                style: cleanStyle,
-                                tap_action: el.tap_action
+                                ...config,
+                                style: cleanStyle
                             }
                         };
-                    });
+
+                        if (Array.isArray(el.elements)) {
+                            element.elements = el.elements.map((child: any) => parseElement(child));
+                        }
+
+                        return element;
+                    };
+
+                    const newElements = parsed.elements.map((el: any) => parseElement(el));
                     setElements(newElements);
                 }
             }
